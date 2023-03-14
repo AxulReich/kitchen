@@ -1,6 +1,6 @@
 module github.com/AxulReich/kitchen
 
-go 1.20
+go 1.19
 
 require (
 	github.com/Shopify/sarama v1.36.0

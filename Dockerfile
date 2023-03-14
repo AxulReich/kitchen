@@ -1,22 +1,14 @@
-# syntax=docker/dockerfile:1
+FROM golang:1.19.2-alpine3.16 AS build
 
-## Build
-FROM golang:1.20 AS builder
-WORKDIR /app
-COPY go.mod ./
-RUN go mod download
+RUN apk --no-cache add gcc g++ make
+RUN apk add git
+WORKDIR /go/src/app
 COPY . .
-RUN go build -o /kitchen
+RUN go mod download
+RUN GOOS=linux go build -ldflags="-s -w" -o ./bin/kitchen ./cmd/main.go
 
-## Deploy
-FROM alpine:3.11
 
-WORKDIR /
+FROM alpine:latest
+WORKDIR /usr/bin
+COPY --from=build /go/src/app/bin /go/bin
 
-COPY --from=build /kitchen /kitchen
-
-EXPOSE 8080 7000 7002
-
-USER nonroot:nonroot
-
-ENTRYPOINT ["/kitchen"]
