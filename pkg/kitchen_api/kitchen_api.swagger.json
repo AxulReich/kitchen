@@ -50,7 +50,7 @@
       }
     },
     "/v1/orders/{order_id}/cooking/end": {
-      "get": {
+      "post": {
         "operationId": "Kitchen_CookingEnd",
         "responses": {
           "200": {
@@ -73,6 +73,14 @@
             "required": true,
             "type": "string",
             "format": "int64"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1CookingEndRequest"
+            }
           }
         ],
         "tags": [
@@ -81,7 +89,7 @@
       }
     },
     "/v1/orders/{order_id}/cooking/start": {
-      "get": {
+      "post": {
         "operationId": "Kitchen_CookingStart",
         "responses": {
           "200": {
@@ -104,6 +112,14 @@
             "required": true,
             "type": "string",
             "format": "int64"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1CookingStartRequest"
+            }
           }
         ],
         "tags": [
@@ -146,8 +162,26 @@
         }
       }
     },
+    "v1CookingEndRequest": {
+      "type": "object",
+      "properties": {
+        "order_id": {
+          "type": "string",
+          "format": "int64"
+        }
+      }
+    },
     "v1CookingEndResponse": {
       "type": "object"
+    },
+    "v1CookingStartRequest": {
+      "type": "object",
+      "properties": {
+        "order_id": {
+          "type": "string",
+          "format": "int64"
+        }
+      }
     },
     "v1CookingStartResponse": {
       "type": "object"

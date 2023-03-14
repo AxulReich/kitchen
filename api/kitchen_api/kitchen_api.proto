@@ -13,12 +13,14 @@ service Kitchen {
   }
   rpc CookingStart(CookingStartRequest) returns (CookingStartResponse) {
     option (google.api.http) = {
-      get: "/v1/orders/{order_id}/cooking/start"
+      post: "/v1/orders/{order_id}/cooking/start"
+      body: "*"
     };
   }
   rpc CookingEnd(CookingEndRequest) returns (CookingEndResponse) {
     option (google.api.http) = {
-      get: "/v1/orders/{order_id}/cooking/end"
+      post: "/v1/orders/{order_id}/cooking/end"
+      body: "*"
     };
   }
 }
