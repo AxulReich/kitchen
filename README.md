@@ -1,5 +1,5 @@
 # kitchen
-# interaction scheme  
+# scheme  
 ![Scheme.png](Scheme.png)
 
 interservice interaction protocol - grpc: fast, auto generation client, easy to use
