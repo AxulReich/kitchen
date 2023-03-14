@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+enum OrderStatus {
+  OrderStatusInvalid = 0;
+  OrderStatusCooking = 1;
+  OrderStatusCooked  = 2;
+}
+
+message Order {
+  int64 shop_order_id = 1;
+  OrderStatus status  = 2;
+}

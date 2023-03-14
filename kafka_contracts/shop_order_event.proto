@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+enum OrderStatus {
+  OrderStatusInvalid   = 0;
+  OrderStatusConfirmed = 1;
+}
+
+enum CurrencyType {
+  CurrencyTypeUnspecified = 0;
+  CurrencyTypeUSD         = 1;
+  CurrencyTypeEUR         = 2;
+  CurrencyTypeMYR         = 3;
+  CurrencyTypeAUD         = 4;
+}
+
+message Order {
+  int64 id            = 1;
+  OrderStatus status  = 2;
+  repeated Item items = 3;
+  Delivery delivery   = 4;
+}
+
+message Delivery {
+  string address = 1;
+}
+
+message Item {
+  string name           = 1;
+  float  amount         = 2;
+  CurrencyType currency = 3;
+  string comment        = 4;
+}

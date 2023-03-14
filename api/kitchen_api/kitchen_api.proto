@@ -1,0 +1,64 @@
+syntax = "proto3";
+
+option go_package = "./;pb";
+package kitchen_api.v1;
+
+import "google/api/annotations.proto";
+
+service Kitchen {
+  rpc GetCookOrders(GetCookOrdersRequest) returns (GetCookOrdersResponse) {
+    option (google.api.http) = {
+      get: "/v1/orders"
+    };
+  }
+  rpc CookingStart(CookingStartRequest) returns (CookingStartResponse) {
+    option (google.api.http) = {
+      get: "/v1/orders/{order_id}/cooking/start"
+    };
+  }
+  rpc CookingEnd(CookingEndRequest) returns (CookingEndResponse) {
+    option (google.api.http) = {
+      get: "/v1/orders/{order_id}/cooking/end"
+    };
+  }
+}
+
+enum KitchenOrderStatus {
+  KitchenOrderStatusInvalid = 0;
+  kitchenOrderStatusNew = 1;
+  kitchenOrderStatusCooking = 2;
+  kitchenOrderStatusCooked = 3;
+}
+
+message Order {
+  int64 id = 1;
+  KitchenOrderStatus status = 2;
+  repeated OrderItem items = 3;
+}
+
+message OrderItem {
+  string name = 1;
+  string comment = 2;
+}
+
+message GetCookOrdersRequest {
+  int64 offset = 1;
+  int64 limit = 2;
+}
+
+message GetCookOrdersResponse {
+  repeated Order orders = 1;
+  int64 total = 3;
+}
+
+message CookingStartRequest {
+  int64 order_id = 1;
+}
+
+message CookingStartResponse {}
+
+message CookingEndRequest {
+  int64 order_id = 1;
+}
+
+message CookingEndResponse {}
