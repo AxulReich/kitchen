@@ -5,10 +5,12 @@ RUN apk add git
 WORKDIR /go/src/app
 COPY . .
 RUN go mod download
-RUN GOOS=linux go build -ldflags="-s -w" -o ./bin/kitchen ./cmd/main.go
+RUN GOOS=linux go build -o ./bin/kitchen ./cmd/main.go
 
 
-FROM alpine:latest
+FROM alpine:3.16
 WORKDIR /usr/bin
-COPY --from=build /go/src/app/bin /go/bin
+EXPOSE 7002 7000 8080
+COPY --from=build /go/src/app/bin /usr/bin
 
+CMD ["/usr/bin/kitchen"]
