@@ -15,7 +15,7 @@ WORKDIR /
 
 COPY --from=build /kitchen /kitchen
 
-EXPOSE 8080
+EXPOSE 8080 7000 7002
 
 USER nonroot:nonroot
 
