@@ -7,3 +7,5 @@ message broker - kafka: high performance, good for scaling
 database - postgres, free, extendable, good for scaling
 
 some tests in internal/pkg/logger
+dockerfile at /build
+
