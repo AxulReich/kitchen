@@ -24,10 +24,14 @@ type Ops interface {
 	QueryRow(ctx context.Context, sql string, args ...interface{}) pgx.Row
 }
 
+type Closer interface {
+	Close()
+}
+
 type DB interface {
 	Ops
 	Tx
-	Close()
+	Closer
 }
 
 type Options struct {
@@ -42,6 +46,7 @@ type beginTx interface {
 type Database struct {
 	Ops
 	beginTx
+	Closer
 }
 
 func NewDB(ctx context.Context, opts Options) (*Database, error) {
