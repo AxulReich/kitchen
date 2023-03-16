@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/AxulReich/kitchen/internal/app/server"
 	"github.com/AxulReich/kitchen/internal/config"
@@ -16,6 +17,14 @@ import (
 type repositoryCollection struct {
 	itemRepository         *postgresq.ItemRepo
 	kitchenOrderRepository *postgresq.KitchenOrderRepo
+}
+
+type closeError struct {
+	errors []string
+}
+
+func (e closeError) Error() string {
+	return strings.Join(e.errors, "; ")
 }
 
 type Application struct {
@@ -95,9 +104,19 @@ func (a *Application) Run(ctx context.Context) error {
 func (a *Application) Close() error {
 	// TODO: make custom error and gather errors
 	//nolint:errcheck
-	a.k8s.Shutdown(context.Background())
+	var closeErr = closeError{}
+
+	if err := a.k8s.Shutdown(context.Background()); err != nil {
+		closeErr.errors = append(closeErr.errors, err.Error())
+	}
+
+	if err := a.worker.close(); err != nil {
+		closeErr.errors = append(closeErr.errors, err.Error())
+	}
+
 	a.server.Stop()
 	a.messageSender.Close()
 	a.db.Close()
-	return a.worker.close()
+
+	return closeErr
 }
