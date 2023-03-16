@@ -27,6 +27,7 @@ type Ops interface {
 type DB interface {
 	Ops
 	Tx
+	Close()
 }
 
 type Options struct {

@@ -45,7 +45,7 @@ func main() {
 		logger.Errorf(ctx, "Got an error...")
 	}
 
-	if err := application.Close(); err != nil {
+	if err = application.Close(); err != nil {
 		logger.Errorf(ctx, "app closed with err: %s", err.Error())
 	}
 }

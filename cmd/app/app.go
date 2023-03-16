@@ -98,5 +98,6 @@ func (a *Application) Close() error {
 	a.k8s.Shutdown(context.Background())
 	a.server.Stop()
 	a.messageSender.Close()
+	a.db.Close()
 	return a.worker.close()
 }
