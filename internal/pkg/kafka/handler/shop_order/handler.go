@@ -24,7 +24,6 @@ func NewHandler(handler consumeFn) *Handler {
 func (h *Handler) process(ctx context.Context, msg *sarama.ConsumerMessage) error {
 	var shopOrderMsg ShopOrderMessage
 	if err := jsoniter.Unmarshal(msg.Value, &shopOrderMsg); err != nil {
-
 		logger.Errorf(ctx, "can't unmurshal message: %s err: %w", string(msg.Value), err)
 		return nil
 	}

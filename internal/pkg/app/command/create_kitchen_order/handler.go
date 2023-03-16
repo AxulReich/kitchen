@@ -20,7 +20,7 @@ func NewHandler(db database.DB, factory repository.Factory) *Handler {
 	return &Handler{db: db, factory: factory}
 }
 
-func (h *Handler) Handle(ctx context.Context, order domain.KitchenOrder) error {
+func (h *Handler) Handle(ctx context.Context, command Command) error {
 	span, ctx := opentracing.StartSpanFromContext(ctx, "command/create_order")
 	defer span.Finish()
 
@@ -31,14 +31,14 @@ func (h *Handler) Handle(ctx context.Context, order domain.KitchenOrder) error {
 		)
 
 		kitchenOrderID, err := orderRepo.Create(ctx, repository.KitchenOrder{
-			ShopOrderID: order.ShopOrderID,
-			Status:      string(order.Status),
+			ShopOrderID: command.Order.ShopOrderID,
+			Status:      string(command.Order.Status),
 		})
 		if err != nil {
 			return fmt.Errorf("orderRepository.Create: %w", err)
 		}
 
-		err = itemRepo.Create(ctx, makeRepositoryItems(kitchenOrderID, order.Items...)...)
+		err = itemRepo.Create(ctx, makeRepositoryItems(kitchenOrderID, command.Order.Items...)...)
 		if err != nil {
 			return fmt.Errorf("itemRepository.Create: %w", err)
 		}
