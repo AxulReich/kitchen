@@ -1,4 +1,4 @@
-package kitchen_order
+package create_kitchen_order
 
 import (
 	"context"

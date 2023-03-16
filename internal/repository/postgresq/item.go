@@ -21,7 +21,7 @@ func (r *ItemRepo) Create(ctx context.Context, items ...repository.Item) error {
 		return nil
 	}
 
-	query, args := makeLabelGroupCreateQuery(items)
+	query, args := makeItemCreateCreateQuery(items)
 	_, err := r.db.Query(ctx, query, args...)
 
 	if err != nil {
@@ -31,7 +31,7 @@ func (r *ItemRepo) Create(ctx context.Context, items ...repository.Item) error {
 	return nil
 }
 
-func makeLabelGroupCreateQuery(items []repository.Item) (string, []interface{}) {
+func makeItemCreateCreateQuery(items []repository.Item) (string, []interface{}) {
 	valueArgs := make([]interface{}, 0, len(items)*4)
 
 	for _, item := range items {
