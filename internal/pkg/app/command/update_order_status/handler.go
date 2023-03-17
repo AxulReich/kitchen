@@ -24,6 +24,6 @@ func NewHandler(db database.DB, factory repository.Factory, sender sender.Produc
 }
 
 func (h Handler) Handle(ctx context.Context, command Command) error {
-	// TODO: here in tx update order and send kitchen order status event to kafka
+
 	return nil
 }

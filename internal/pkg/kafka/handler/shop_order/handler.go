@@ -4,15 +4,13 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/AxulReich/kitchen/internal/pkg/app/command/create_kitchen_order"
-
 	"github.com/AxulReich/kitchen/internal/pkg/domain"
 	"github.com/AxulReich/kitchen/internal/pkg/logger"
 	"github.com/Shopify/sarama"
 	jsoniter "github.com/json-iterator/go"
 )
 
-type consumeFn = func(context.Context, create_kitchen_order.Command) error
+type consumeFn = func(context.Context, domain.KitchenOrder) error
 
 type Handler struct {
 	handler consumeFn
@@ -55,9 +53,7 @@ func (h *Handler) process(ctx context.Context, msg *sarama.ConsumerMessage) erro
 	}
 	kitchenOrder.Items = items
 
-	if err := h.handler(ctx, create_kitchen_order.Command{
-		Order: kitchenOrder,
-	}); err != nil {
+	if err := h.handler(ctx, kitchenOrder); err != nil {
 		return err
 	}
 
