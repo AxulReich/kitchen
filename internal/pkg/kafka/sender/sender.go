@@ -32,6 +32,6 @@ func (s *MessageSender) SendMessage(value []byte) error {
 	return err
 }
 
-func (s *MessageSender) Close() {
-	s.syncProducer.Close()
+func (s *MessageSender) Close() error {
+	return s.syncProducer.Close()
 }

@@ -114,8 +114,11 @@ func (a *Application) Close() error {
 		closeErr.errors = append(closeErr.errors, err.Error())
 	}
 
+	if err := a.messageSender.Close(); err != nil {
+		closeErr.errors = append(closeErr.errors, err.Error())
+	}
+
 	a.server.Stop()
-	a.messageSender.Close()
 	a.db.Close()
 
 	return closeErr
