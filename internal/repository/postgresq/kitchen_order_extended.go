@@ -24,7 +24,7 @@ func (r *KitchenOrderExtendedRepo) List(ctx context.Context, offset, limit int64
 				   item.item_name       as item_name,
 				   item.item_comment    as item_comment
 			from (select * from kitchen_order offset $1 limit $2) orders, item
-			where orders.id = item.kitchen_order_id;`,
+			join item on orders.id = item.kitchen_order_id`,
 		offset,
 		limit).
 		Scan(&result)
