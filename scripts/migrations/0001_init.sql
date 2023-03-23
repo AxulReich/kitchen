@@ -9,7 +9,7 @@ CREATE TABLE kitchen_order
 
 CREATE TABLE item
 (
-    kitchen_order_id    BIGSERIAL REFERENCES kitchen_order(id),
+    kitchen_order_id    BIGINT REFERENCES kitchen_order(id),
     item_name           TEXT                  NOT NULL,
     item_comment        TEXT                  NULL
 );

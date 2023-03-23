@@ -5,6 +5,6 @@ import "github.com/AxulReich/kitchen/internal/pkg/domain"
 type (
 	Command struct {
 		KitchenOrderID int64
-		Status         domain.KitchenOrderStatus
+		Status         domain.KitchenOrderStatusEnum
 	}
 )

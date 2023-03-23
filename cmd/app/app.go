@@ -70,6 +70,9 @@ func NewApplication(ctx context.Context, cfg *config.Config, shutDownChan chan s
 		a.messageSender = sender.NewMessageSender(producer, cfg.KitchenOrderEventTopic)
 	}
 
+	a.initRepositoryCollection()
+	a.initHandlers()
+
 	{
 		worker, err := newKafkaWorker(ctx, cfg, a.handlers.kafkaShopOrderHandler)
 		if err != nil {
@@ -78,9 +81,6 @@ func NewApplication(ctx context.Context, cfg *config.Config, shutDownChan chan s
 
 		a.worker = worker
 	}
-
-	a.initRepositoryCollection()
-	a.initHandlers()
 
 	a.server = server.NewServer(cfg, a.handlers.updateOrderStatusHandler, a.handlers.getOrdersHandler)
 

@@ -4,19 +4,19 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/AxulReich/kitchen/internal/pkg/app/command/create_kitchen_order"
+
 	"github.com/AxulReich/kitchen/internal/pkg/domain"
 	"github.com/AxulReich/kitchen/internal/pkg/logger"
 	"github.com/Shopify/sarama"
 	jsoniter "github.com/json-iterator/go"
 )
 
-type consumeFn = func(context.Context, domain.KitchenOrder) error
-
 type Handler struct {
-	handler consumeFn
+	handler create_kitchen_order.CreateKitchenOrderHandler
 }
 
-func NewHandler(handler consumeFn) *Handler {
+func NewHandler(handler create_kitchen_order.CreateKitchenOrderHandler) *Handler {
 	return &Handler{handler: handler}
 }
 
@@ -27,21 +27,21 @@ func (h *Handler) process(ctx context.Context, msg *sarama.ConsumerMessage) erro
 		logger.Errorf(ctx, "can't unmurshal message: %s err: %w", string(msg.Value), err)
 		return nil
 	}
-	if shopOrderMsg.Status != domain.ShopOrderStatusConfirmed {
-		return nil
-	}
+
 	if shopOrderMsg.ID == 0 {
-		logger.Errorf(ctx, "invalid shop order status: %d", shopOrderMsg.ID)
-		return nil
+		return fmt.Errorf("invalid shop order status: %d", shopOrderMsg.ID)
 	}
 	if len(shopOrderMsg.Items) == 0 {
-		logger.Errorf(ctx, "invalid shop order items len: %d", shopOrderMsg.ID)
-		return nil
+		return fmt.Errorf("invalid shop order items len: %d", shopOrderMsg.ID)
+	}
+
+	if shopOrderMsg.Status != string(domain.ShopOrderStatusConfirmed) {
+		return fmt.Errorf("invalid shop order items len: %s", shopOrderMsg.Status)
 	}
 
 	kitchenOrder := domain.KitchenOrder{
 		ShopOrderID: shopOrderMsg.ID,
-		Status:      domain.KitchenOrderStatusNew,
+		Status:      domain.Values.New,
 	}
 
 	items := make([]domain.Item, 0, len(shopOrderMsg.Items))
@@ -53,7 +53,7 @@ func (h *Handler) process(ctx context.Context, msg *sarama.ConsumerMessage) erro
 	}
 	kitchenOrder.Items = items
 
-	if err := h.handler(ctx, kitchenOrder); err != nil {
+	if err := h.handler.Handle(ctx, create_kitchen_order.Command{Order: kitchenOrder}); err != nil {
 		return err
 	}
 

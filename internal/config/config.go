@@ -29,8 +29,8 @@ type Config struct {
 	RetryWait           time.Duration `split_words:"true" default:"100ms"`
 	ExternalCallTimeout time.Duration `split_words:"true" default:"5s"`
 
-	ShopOrderEventTopic    string `split_words:"true" default:"shop_order_event"`
-	KitchenOrderEventTopic string `split_words:"true" default:"kitchen_order_event"`
+	ShopOrderEventTopic    string `split_words:"true" default:"shop-orders-events"`
+	KitchenOrderEventTopic string `split_words:"true" default:"kitchen-orders-events"`
 }
 
 // FromEnv gets config from env vars

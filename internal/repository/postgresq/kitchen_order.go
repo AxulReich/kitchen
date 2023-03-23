@@ -5,7 +5,6 @@ import (
 	"fmt"
 
 	"github.com/AxulReich/kitchen/internal/pkg/database"
-	"github.com/AxulReich/kitchen/internal/pkg/domain"
 	"github.com/AxulReich/kitchen/internal/repository"
 )
 
@@ -26,7 +25,7 @@ func (r *KitchenOrderRepo) Create(ctx context.Context, order repository.KitchenO
         ) VALUES ($1,$2)
 		RETURNING id`,
 		order.ShopOrderID,
-		string(domain.KitchenOrderStatusNew),
+		"new",
 	).Scan(&id)
 
 	if err != nil {

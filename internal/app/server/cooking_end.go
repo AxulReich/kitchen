@@ -13,7 +13,7 @@ import (
 func (k *KitchenServer) CookingEnd(ctx context.Context, request *pb.CookingEndRequest) (*pb.CookingEndResponse, error) {
 	err := k.updateOrderStatus.Handle(ctx, update_order_status.Command{
 		KitchenOrderID: request.OrderId,
-		Status:         domain.KitchenOrderStatusCooked,
+		Status:         domain.Values.CookingEnd,
 	})
 
 	if err != nil {

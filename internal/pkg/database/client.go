@@ -54,7 +54,6 @@ func NewDB(ctx context.Context, opts Options) (*Database, error) {
 	if err != nil {
 		return nil, fmt.Errorf("can't init pool: %w", err)
 	}
-	defer db.Close()
 
 	pingCtx, cancel := context.WithTimeout(ctx, pingTimeout)
 	defer cancel()

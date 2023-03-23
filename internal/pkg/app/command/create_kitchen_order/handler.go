@@ -8,8 +8,11 @@ import (
 	"github.com/AxulReich/kitchen/internal/pkg/domain"
 	"github.com/AxulReich/kitchen/internal/repository"
 	"github.com/jackc/pgx/v4"
-	"github.com/opentracing/opentracing-go"
 )
+
+type CreateKitchenOrderHandler interface {
+	Handle(ctx context.Context, command Command) error
+}
 
 type Handler struct {
 	db      database.DB
@@ -21,9 +24,6 @@ func NewHandler(db database.DB, factory repository.Factory) *Handler {
 }
 
 func (h *Handler) Handle(ctx context.Context, command Command) error {
-	span, ctx := opentracing.StartSpanFromContext(ctx, "command/create_order")
-	defer span.Finish()
-
 	err := h.db.WithTx(ctx, func(tx database.Ops) error {
 		var (
 			orderRepo = h.factory.NewKitchenOrderRepository(tx)
@@ -32,8 +32,9 @@ func (h *Handler) Handle(ctx context.Context, command Command) error {
 
 		kitchenOrderID, err := orderRepo.Create(ctx, repository.KitchenOrder{
 			ShopOrderID: command.Order.ShopOrderID,
-			Status:      string(command.Order.Status),
+			Status:      fmt.Sprintf("%s", command.Order.Status),
 		})
+
 		if err != nil {
 			return fmt.Errorf("orderRepository.Create: %w", err)
 		}

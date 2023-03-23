@@ -16,13 +16,13 @@ func convertItems(items []domain.Item) []*pb.OrderItem {
 	return result
 }
 
-func convertStatus(status domain.KitchenOrderStatus) pb.KitchenOrderStatus {
+func convertStatus(status domain.KitchenOrderStatusEnum) pb.KitchenOrderStatus {
 	switch status {
-	case domain.KitchenOrderStatusNew:
+	case domain.Values.New:
 		return pb.KitchenOrderStatus_kitchenOrderStatusNew
-	case domain.KitchenOrderStatusCooking:
+	case domain.Values.CookingStart:
 		return pb.KitchenOrderStatus_kitchenOrderStatusCooking
-	case domain.KitchenOrderStatusCooked:
+	case domain.Values.CookingEnd:
 		return pb.KitchenOrderStatus_kitchenOrderStatusCooked
 	}
 	return pb.KitchenOrderStatus_KitchenOrderStatusInvalid

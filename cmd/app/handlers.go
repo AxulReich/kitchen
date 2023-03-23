@@ -1,12 +1,9 @@
 package app
 
 import (
-	"context"
-
 	"github.com/AxulReich/kitchen/internal/pkg/app/command/create_kitchen_order"
 	"github.com/AxulReich/kitchen/internal/pkg/app/command/update_order_status"
 	"github.com/AxulReich/kitchen/internal/pkg/app/query/get_orders"
-	"github.com/AxulReich/kitchen/internal/pkg/domain"
 	"github.com/AxulReich/kitchen/internal/pkg/kafka/handler/shop_order"
 	"github.com/AxulReich/kitchen/internal/repository/postgresq"
 )
@@ -23,10 +20,7 @@ func (a *Application) initHandlers() {
 	collection := handlerCollection{}
 
 	collection.kitchenOrderHandler = create_kitchen_order.NewHandler(a.db, postgresq.Factory{})
-	collection.kafkaShopOrderHandler = shop_order.NewHandler(
-		func(ctx context.Context, order domain.KitchenOrder) error {
-			return collection.kitchenOrderHandler.Handle(ctx, create_kitchen_order.Command{Order: order})
-		})
+	collection.kafkaShopOrderHandler = shop_order.NewHandler(collection.kitchenOrderHandler)
 
 	collection.updateOrderStatusHandler = update_order_status.NewHandler(a.db, postgresq.Factory{}, a.messageSender)
 	collection.getOrdersHandler = get_orders.NewHandler(a.db)
