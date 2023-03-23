@@ -23,7 +23,7 @@ func (a *Application) initHandlers() {
 	collection.kafkaShopOrderHandler = shop_order.NewHandler(collection.kitchenOrderHandler)
 
 	collection.updateOrderStatusHandler = update_order_status.NewHandler(a.db, postgresq.Factory{}, a.messageSender)
-	collection.getOrdersHandler = get_orders.NewHandler(a.db)
+	collection.getOrdersHandler = get_orders.NewHandler(a.repositories.kitchenOrderExtendedRepository)
 
 	a.handlers = collection
 }

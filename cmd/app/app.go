@@ -15,8 +15,9 @@ import (
 )
 
 type repositoryCollection struct {
-	itemRepository         *postgresq.ItemRepo
-	kitchenOrderRepository *postgresq.KitchenOrderRepo
+	itemRepository                 *postgresq.ItemRepo
+	kitchenOrderRepository         *postgresq.KitchenOrderRepo
+	kitchenOrderExtendedRepository *postgresq.KitchenOrderExtendedRepo
 }
 
 type closeError struct {

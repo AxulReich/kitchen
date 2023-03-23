@@ -17,3 +17,7 @@ type KitchenOrderRepository interface {
 type ItemRepository interface {
 	Create(ctx context.Context, items ...Item) error
 }
+
+type KitchenOrderExtendedRepository interface {
+	List(ctx context.Context, offset, limit int64) ([]KitchenOrderExtended, int64, error)
+}
