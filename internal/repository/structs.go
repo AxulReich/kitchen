@@ -2,7 +2,7 @@ package repository
 
 type (
 	KitchenOrderExtended struct {
-		ShopOrderID int64  `db:"shop_order_id"`
+		ShopOrderID int64  `db:"id"`
 		Status      string `db:"status"`
 		ItemName    string `db:"item_name"`
 		ItemComment string `db:"item_comment"`
