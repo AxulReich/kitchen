@@ -1,10 +1,10 @@
 package domain
 
 type KitchenOrder struct {
-	ID          int64
-	ShopOrderID int64
-	Status      KitchenOrderStatusEnum
-	Items       []Item
+	ID          int64                  `json:"kitchen_order_id,omitempty"`
+	ShopOrderID int64                  `json:"id"`
+	Status      KitchenOrderStatusEnum `json:"status"`
+	Items       []Item                 `json:"items,omitempty"`
 }
 
 type KitchenOrderStatusEnum interface {

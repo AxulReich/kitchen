@@ -4,10 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/AxulReich/kitchen/internal/pkg/database"
 	"github.com/AxulReich/kitchen/internal/pkg/domain"
 	"github.com/AxulReich/kitchen/internal/repository"
-	"github.com/jackc/pgx/v4"
 )
 
 type CreateKitchenOrderHandler interface {
@@ -15,41 +13,33 @@ type CreateKitchenOrderHandler interface {
 }
 
 type Handler struct {
-	db      database.DB
-	factory repository.Factory
+	kitchenRepo repository.KitchenOrderRepository
 }
 
-func NewHandler(db database.DB, factory repository.Factory) *Handler {
-	return &Handler{db: db, factory: factory}
+func NewHandler(kitchenRepo repository.KitchenOrderRepository) *Handler {
+	return &Handler{kitchenRepo: kitchenRepo}
 }
 
 func (h *Handler) Handle(ctx context.Context, command Command) error {
-	err := h.db.WithTx(ctx, func(tx database.Ops) error {
-		var (
-			orderRepo = h.factory.NewKitchenOrderRepository(tx)
-			itemRepo  = h.factory.NewItemRepository(tx)
-		)
-
-		kitchenOrderID, err := orderRepo.Create(ctx, repository.KitchenOrder{
+	//	Create(ctx context.Context, order KitchenOrder, items ...Item) error
+	var (
+		orderDB = repository.KitchenOrder{
 			ShopOrderID: command.Order.ShopOrderID,
-			Status:      fmt.Sprintf("%s", command.Order.Status),
+			Status:      "new",
+		}
+		itemsDB = make([]repository.Item, 0, len(command.Order.Items))
+	)
+	for _, item := range command.Order.Items {
+		itemsDB = append(itemsDB, repository.Item{
+			Name:    item.Name,
+			Comment: item.Comment,
 		})
+	}
 
-		if err != nil {
-			return fmt.Errorf("orderRepository.Create: %w", err)
-		}
-
-		err = itemRepo.Create(ctx, makeRepositoryItems(kitchenOrderID, command.Order.Items...)...)
-		if err != nil {
-			return fmt.Errorf("itemRepository.Create: %w", err)
-		}
-
-		return nil
-
-	}, database.ReadWrite(), database.IsolationLevel(pgx.RepeatableRead))
+	err := h.kitchenRepo.Create(ctx, orderDB, itemsDB)
 
 	if err != nil {
-		return fmt.Errorf("tx: %w", err)
+		return fmt.Errorf("create_kitchen_order.Handler.Handle: %w", err)
 	}
 
 	return nil

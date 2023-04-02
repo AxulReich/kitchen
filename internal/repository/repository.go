@@ -10,12 +10,8 @@ import (
 var ErrNoRowsAffected = errors.New("no rows affected")
 
 type KitchenOrderRepository interface {
-	Create(ctx context.Context, order KitchenOrder) (int64, error)
+	Create(ctx context.Context, order KitchenOrder, items []Item) error
 	UpdateStatus(ctx context.Context, orderID int64, status string) error
-}
-
-type ItemRepository interface {
-	Create(ctx context.Context, items ...Item) error
 }
 
 type KitchenOrderExtendedRepository interface {

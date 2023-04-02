@@ -85,7 +85,9 @@ func newKafkaProducer(ctx context.Context, cfg *config.Config) (sarama.SyncProdu
 		return nil, err
 	}
 	producerCfg.Version = version
-
+	// configure this
+	producerCfg.Producer.Retry.Max = 5
+	producerCfg.Producer.Retry.Backoff = 1 * time.Second
 	// TODO: add metrics for success/error message sending and handle err chan
 	producerCfg.Producer.Return.Successes = true
 	producerCfg.Producer.Return.Errors = true

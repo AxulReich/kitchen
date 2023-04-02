@@ -15,7 +15,6 @@ import (
 )
 
 type repositoryCollection struct {
-	itemRepository                 *postgresq.ItemRepo
 	kitchenOrderRepository         *postgresq.KitchenOrderRepo
 	kitchenOrderExtendedRepository *postgresq.KitchenOrderExtendedRepo
 }
@@ -103,8 +102,6 @@ func (a *Application) Run(ctx context.Context) error {
 }
 
 func (a *Application) Close() error {
-	// TODO: make custom error and gather errors
-	//nolint:errcheck
 	var closeErr = closeError{}
 
 	if err := a.k8s.Shutdown(context.Background()); err != nil {

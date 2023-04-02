@@ -7,4 +7,9 @@ type (
 		KitchenOrderID int64
 		Status         domain.KitchenOrderStatusEnum
 	}
+
+	ShopOrder struct {
+		ID     int64  `json:"id"`
+		Status string `json:"status"`
+	}
 )

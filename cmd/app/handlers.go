@@ -5,7 +5,6 @@ import (
 	"github.com/AxulReich/kitchen/internal/pkg/app/command/update_order_status"
 	"github.com/AxulReich/kitchen/internal/pkg/app/query/get_orders"
 	"github.com/AxulReich/kitchen/internal/pkg/kafka/handler/shop_order"
-	"github.com/AxulReich/kitchen/internal/repository/postgresq"
 )
 
 type handlerCollection struct {
@@ -19,10 +18,10 @@ func (a *Application) initHandlers() {
 	// TODO: clean the mess
 	collection := handlerCollection{}
 
-	collection.kitchenOrderHandler = create_kitchen_order.NewHandler(a.db, postgresq.Factory{})
+	collection.kitchenOrderHandler = create_kitchen_order.NewHandler(a.repositories.kitchenOrderRepository)
 	collection.kafkaShopOrderHandler = shop_order.NewHandler(collection.kitchenOrderHandler)
 
-	collection.updateOrderStatusHandler = update_order_status.NewHandler(a.db, postgresq.Factory{}, a.messageSender)
+	collection.updateOrderStatusHandler = update_order_status.NewHandler(a.repositories.kitchenOrderRepository, a.messageSender)
 	collection.getOrdersHandler = get_orders.NewHandler(a.repositories.kitchenOrderExtendedRepository)
 
 	a.handlers = collection

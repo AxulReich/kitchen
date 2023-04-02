@@ -7,7 +7,7 @@ import (
 )
 
 type Producer interface {
-	SendMessage(value []byte) error
+	SendMessage(key sarama.Encoder, value []byte) error
 }
 
 type MessageSender struct {
@@ -19,11 +19,9 @@ func NewMessageSender(syncProducer sarama.SyncProducer, topic string) *MessageSe
 	return &MessageSender{syncProducer: syncProducer, topic: topic}
 }
 
-func (s *MessageSender) SendMessage(value []byte) error {
-	// By default the package uses HashPartitioner
-	// Messages with the same Key will be added to the single partition
-	// In case Key is omited — the package uses RandomPartitioner
+func (s *MessageSender) SendMessage(key sarama.Encoder, value []byte) error {
 	_, _, err := s.syncProducer.SendMessage(&sarama.ProducerMessage{
+		Key:       key,
 		Topic:     s.topic,
 		Value:     sarama.ByteEncoder(value),
 		Timestamp: time.Now(),
