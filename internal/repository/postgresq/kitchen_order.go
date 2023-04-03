@@ -90,11 +90,12 @@ func makeItemCreateCreateQuery(kitchenOrderID int64, items []repository.Item) (s
 }
 
 func (r *KitchenOrderRepo) UpdateStatus(ctx context.Context, orderID int64, status string) error {
+	//TODO: first check if order exist
 	result, err := r.db.Exec(ctx, `
 		UPDATE kitchen_order
 		SET
 			status=$1
-		WHERE id = $2`,
+		WHERE shop_order_id = $2`,
 		status,
 		orderID,
 	)
@@ -102,6 +103,7 @@ func (r *KitchenOrderRepo) UpdateStatus(ctx context.Context, orderID int64, stat
 	if err != nil {
 		return fmt.Errorf("can't execute query: %w", err)
 	}
+
 	if result.RowsAffected() == 0 {
 		return repository.ErrNoRowsAffected
 	}

@@ -9,7 +9,7 @@ import (
 	"github.com/AxulReich/kitchen/internal/app/server"
 	"github.com/AxulReich/kitchen/internal/config"
 	"github.com/AxulReich/kitchen/internal/pkg/database"
-	"github.com/AxulReich/kitchen/internal/pkg/kafka/sender"
+	"github.com/AxulReich/kitchen/internal/pkg/kafka/kitchen_order_events_sender"
 	"github.com/AxulReich/kitchen/internal/pkg/logger"
 	"github.com/AxulReich/kitchen/internal/repository/postgresq"
 )
@@ -34,7 +34,7 @@ type Application struct {
 	repositories repositoryCollection
 	handlers     handlerCollection
 
-	messageSender *sender.MessageSender
+	messageSender *kitchen_order_events_sender.MessageSender
 	server        *server.KitchenServer
 	k8s           *http.Server
 	shutDownChan  chan struct{}
@@ -67,7 +67,7 @@ func NewApplication(ctx context.Context, cfg *config.Config, shutDownChan chan s
 		if err != nil {
 			return nil, err
 		}
-		a.messageSender = sender.NewMessageSender(producer, cfg.KitchenOrderEventTopic)
+		a.messageSender = kitchen_order_events_sender.NewMessageSender(producer, cfg.KitchenOrderEventTopic)
 	}
 
 	a.initRepositoryCollection()

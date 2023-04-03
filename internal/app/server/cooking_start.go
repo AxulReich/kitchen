@@ -12,8 +12,8 @@ import (
 
 func (k *KitchenServer) CookingStart(ctx context.Context, request *pb.CookingStartRequest) (*pb.CookingStartResponse, error) {
 	err := k.updateOrderStatus.Handle(ctx, update_order_status.Command{
-		KitchenOrderID: request.OrderId,
-		Status:         domain.Values.CookingStart,
+		ShopOrderID: request.OrderId,
+		Status:      domain.Values.CookingStart,
 	})
 
 	if err != nil {

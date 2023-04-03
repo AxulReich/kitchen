@@ -1,13 +1,14 @@
-package sender
+package kitchen_order_events_sender
 
 import (
+	"github.com/AxulReich/kitchen/internal/pkg/domain"
 	"time"
 
 	"github.com/Shopify/sarama"
 )
 
 type Producer interface {
-	SendMessage(key sarama.Encoder, value []byte) error
+	SendKitchenOrderStatusEvent(key sarama.Encoder, value []byte) error
 }
 
 type MessageSender struct {
@@ -19,7 +20,8 @@ func NewMessageSender(syncProducer sarama.SyncProducer, topic string) *MessageSe
 	return &MessageSender{syncProducer: syncProducer, topic: topic}
 }
 
-func (s *MessageSender) SendMessage(key sarama.Encoder, value []byte) error {
+func (s *MessageSender) SendKitchenOrderStatusEvent(key sarama.Encoder, order domain.KitchenOrder) error {
+
 	_, _, err := s.syncProducer.SendMessage(&sarama.ProducerMessage{
 		Key:       key,
 		Topic:     s.topic,
